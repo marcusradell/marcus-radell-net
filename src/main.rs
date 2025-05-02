@@ -8,8 +8,9 @@ async fn hello_world() -> &'static str {
 async fn get_status() -> String {
     let health = Health::new();
 
-    format!("{:?}", health.get_status())
+    health.to_string()
 }
+
 #[shuttle_runtime::main]
 async fn main() -> shuttle_axum::ShuttleAxum {
     let router = Router::new()

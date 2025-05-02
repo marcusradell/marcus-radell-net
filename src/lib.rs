@@ -1,8 +1,22 @@
+use std::fmt::Display;
+
 #[derive(Debug, Clone)]
 pub enum Status {
     Alive,
     Ready,
 }
+
+impl Display for Status {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let status_string = match self {
+            Status::Alive => "Alive",
+            Status::Ready => "Ready",
+        };
+
+        write!(f, "{}", status_string)
+    }
+}
+
 #[derive(Debug)]
 pub struct Health {
     status: Status,
@@ -25,5 +39,11 @@ impl Health {
 
     pub fn set_alive(&mut self) {
         self.status = Status::Alive;
+    }
+}
+
+impl Display for Health {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{:}", self.status)
     }
 }
