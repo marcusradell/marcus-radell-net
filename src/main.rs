@@ -7,7 +7,6 @@ async fn hello_world() -> &'static str {
 
 async fn get_status() -> String {
     let health = Health::new();
-
     health.to_string()
 }
 
