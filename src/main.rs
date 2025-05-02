@@ -1,4 +1,7 @@
-use axum::{Router, routing::get};
+use axum::{
+    Router,
+    routing::{get, head},
+};
 use marcus_radell_net::Health;
 
 async fn get_status() -> String {
@@ -8,7 +11,9 @@ async fn get_status() -> String {
 
 #[shuttle_runtime::main]
 async fn main() -> shuttle_axum::ShuttleAxum {
-    let router = Router::new().route("/status", get(get_status));
+    let router = Router::new()
+        .route("/status", get(get_status))
+        .route("/", head(|| async {}));
     println!("Starting server!");
     Ok(router.into())
 }
