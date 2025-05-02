@@ -22,4 +22,8 @@ impl Health {
     pub fn set_ready(&mut self) {
         self.status = Status::Ready;
     }
+
+    pub fn set_alive(&mut self) {
+        self.status = Status::Alive;
+    }
 }
