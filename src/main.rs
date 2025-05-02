@@ -5,13 +5,10 @@ async fn hello_world() -> &'static str {
     "Hello, world!"
 }
 
-async fn get_status() -> &'static str {
+async fn get_status() -> String {
     let health = Health::new();
 
-    match health.get_status() {
-        marcus_radell_net::Status::Alive => "Alive",
-        marcus_radell_net::Status::Ready => "Ready",
-    }
+    format!("{:?}", health.get_status())
 }
 #[shuttle_runtime::main]
 async fn main() -> shuttle_axum::ShuttleAxum {
