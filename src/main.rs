@@ -14,6 +14,6 @@ async fn main() -> shuttle_axum::ShuttleAxum {
     let router = Router::new()
         .route("/status", get(get_status))
         .route("/", head(|| async {}));
-    println!("Starting server!");
+    tracing::info!("Starting server!");
     Ok(router.into())
 }

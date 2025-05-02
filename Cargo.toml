@@ -8,3 +8,4 @@ axum = "0.8.3"
 shuttle-axum = "0.53.0"
 shuttle-runtime = { version = "0.53.0", features = ["setup-otel-exporter"] }
 tokio = { version = "1.44.2", features = ["macros", "rt-multi-thread"] }
+tracing = "0.1.41"
