@@ -1,5 +1,7 @@
 use std::fmt::Display;
 
+use axum::{Router, routing::get};
+
 #[derive(Debug, Clone)]
 pub enum Status {
     Alive,
@@ -41,8 +43,11 @@ impl Health {
         self.status = Status::Alive;
     }
 
-    pub fn get_status_route(&self) -> String {
-        self.status.to_string()
+    pub fn get_router(&self) -> Router {
+        Router::new().route("/", {
+            let this = self.clone();
+            get(|| async move { this.get_status().to_string() })
+        })
     }
 }
 
