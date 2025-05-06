@@ -1,5 +1,5 @@
 use axum::{Router, routing::get};
-use marcus_radell_net::kits::status::Health;
+use marcus_radell_net::kits::health::Health;
 use maud::{Markup, html};
 
 async fn get_home_page() -> Markup {
