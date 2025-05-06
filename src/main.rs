@@ -2,7 +2,7 @@ use axum::{
     Router,
     routing::{get, head},
 };
-use marcus_radell_net::Health;
+use marcus_radell_net::kits::status::Health;
 
 async fn get_status() -> String {
     let health = Health::new();
