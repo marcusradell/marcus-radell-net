@@ -17,7 +17,7 @@ impl Display for Status {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Health {
     status: Status,
 }
@@ -39,6 +39,10 @@ impl Health {
 
     pub fn set_alive(&mut self) {
         self.status = Status::Alive;
+    }
+
+    pub fn get_status_route(&self) -> String {
+        self.status.to_string()
     }
 }
 

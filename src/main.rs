@@ -1,5 +1,5 @@
 use axum::{Router, routing::get};
-use marcus_radell_net::kits::status::Health;
+use marcus_radell_net::kits::status::{Health, Status};
 use maud::{Markup, html};
 
 async fn get_home_page() -> Markup {
@@ -8,15 +8,17 @@ async fn get_home_page() -> Markup {
     }
 }
 
-async fn get_status() -> String {
-    let health = Health::new();
-    health.to_string()
-}
-
 #[shuttle_runtime::main]
 async fn main() -> shuttle_axum::ShuttleAxum {
+    let health = Health::new();
     let router = Router::new()
-        .route("/status", get(get_status))
+        .route(
+            "/health",
+            get({
+                let health = health.clone();
+                || async move { health.get_status_route() }
+            }),
+        )
         .route("/", get(get_home_page));
     tracing::info!("Starting server!");
     Ok(router.into())
