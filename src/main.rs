@@ -16,15 +16,19 @@ async fn main() {
         .with_max_level(tracing::Level::INFO)
         .init();
 
-    let health = Health::new();
+    let mut health = Health::new();
     let router = Router::new()
         .route("/", get(get_home_page))
         .nest("/health", health.get_router())
         .nest_service("/favicon.ico", ServeFile::new("public/favicon.ico"));
 
     let addr = SocketAddr::from(([0, 0, 0, 0], 8080));
-    tracing::info!("Starting server on {}", addr);
 
     let listener = tokio::net::TcpListener::bind(addr).await.unwrap();
+
+    tracing::info!("Starting server on http://{}", addr);
+    health.set_ready();
+
+    tracing::info!("Health status: {}", health.get_status());
     axum::serve(listener, router).await.unwrap();
 }

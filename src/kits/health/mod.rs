@@ -1,4 +1,6 @@
 use std::fmt::Display;
+use std::sync::Arc;
+use std::sync::RwLock;
 
 use axum::{Router, routing::get};
 
@@ -21,26 +23,28 @@ impl Display for Status {
 
 #[derive(Debug, Clone)]
 pub struct Health {
-    status: Status,
+    status: Arc<RwLock<Status>>,
 }
 
 impl Health {
     pub fn new() -> Self {
         Health {
-            status: Status::Alive,
+            status: Arc::new(RwLock::new(Status::Alive)),
         }
     }
 
     pub fn get_status(&self) -> Status {
-        self.status.clone()
+        self.status.read().unwrap().clone()
     }
 
     pub fn set_ready(&mut self) {
-        self.status = Status::Ready;
+        let mut status = self.status.write().unwrap();
+        *status = Status::Ready;
     }
 
     pub fn set_alive(&mut self) {
-        self.status = Status::Alive;
+        let mut status = self.status.write().unwrap();
+        *status = Status::Alive;
     }
 
     pub fn get_router(&self) -> Router {
@@ -53,6 +57,6 @@ impl Health {
 
 impl Display for Health {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{:}", self.status)
+        write!(f, "{:}", self.get_status())
     }
 }
