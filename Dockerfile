@@ -1,9 +1,9 @@
 # Build stage
-FROM rust:alpine AS builder
+FROM rust:1.86.0-alpine3.21 AS builder
 
 WORKDIR /usr/src/app
 
-RUN apk add pkgconfig openssl-dev libc-dev
+RUN apk add --no-cache pkgconfig openssl-dev libc-dev
 
 # Copy the entire project
 COPY . .
@@ -11,10 +11,10 @@ COPY . .
 RUN cargo build --release
 
 # Production stage - using Alpine for minimal image size
-FROM rust:alpine
+FROM alpine:3.21
 
 RUN apk update \
-    && apk add openssl ca-certificates
+    && apk add --no-cache openssl ca-certificates
 
 # Create a non-privileged user
 RUN addgroup -S docker && adduser -S docker -G docker
