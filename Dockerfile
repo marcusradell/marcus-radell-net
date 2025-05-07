@@ -1,33 +1,23 @@
 # Build stage
-FROM rust:slim-bullseye AS builder
+FROM rust:alpine AS builder
 
 WORKDIR /usr/src/app
 
-# Copy over manifests
-COPY Cargo.lock Cargo.toml ./
+RUN apk add pkgconfig openssl-dev libc-dev
 
-# Create a dummy src/main.rs to build dependencies
-RUN mkdir src && \
-    echo "fn main() {println!(\"dummy\");}" > src/main.rs && \
-    cargo build --release && \
-    rm -rf src
+# Copy the entire project
+COPY . .
 
-# Copy actual source code
-COPY ./src ./src
-
-# Build the actual application
 RUN cargo build --release
 
-# Production stage
-FROM debian:bullseye-slim
+# Production stage - using Alpine for minimal image size
+FROM rust:alpine
 
-# Install necessary runtime dependencies
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    ca-certificates \
-    && rm -rf /var/lib/apt/lists/*
+RUN apk update \
+    && apk add openssl ca-certificates
 
 # Create a non-privileged user
-RUN groupadd -r docker && useradd -r -g docker docker
+RUN addgroup -S docker && adduser -S docker -G docker
 
 # Copy the build artifact from the build stage
 COPY --from=builder /usr/src/app/target/release/marcus-radell-net /usr/local/bin/
@@ -40,4 +30,3 @@ ENTRYPOINT ["/usr/local/bin/marcus-radell-net"]
 
 # Expose port if your application listens on a port
 EXPOSE 8080
-
