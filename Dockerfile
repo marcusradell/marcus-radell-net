@@ -1,5 +1,5 @@
 # Build stage
-FROM rust:slim-bullseye as builder
+FROM rust:slim-bullseye AS builder
 
 WORKDIR /usr/src/app
 
